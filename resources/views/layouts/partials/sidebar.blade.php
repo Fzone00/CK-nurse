@@ -34,8 +34,16 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ route('products.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-th-large"></i>
+              <p>
+                Products
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
            <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <i class="nav-icon fas fa-sign-out-alt"></i>
             <p>
               Logout  
             </p>

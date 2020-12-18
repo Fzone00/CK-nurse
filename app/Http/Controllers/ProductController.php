@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -26,7 +28,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
+        return view('products.create');
     }
 
     /**
@@ -35,9 +37,27 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $image_path = '';
+
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('products');
+        }
+
+        $product = Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $image_path,
+            'barcode' =>$request->barcode,
+            'price' =>$request->price,
+            'status' =>$request->status
+        ]);
+
+        if (! $product) {
+            return redirect()->back()->with('error', 'Sorry, there a problem while creating product.');
+        }
+        return redirect()->route('products.index')->with('success', 'Success,you product have been created.');
     }
 
     /**
@@ -59,7 +79,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('products.edit')->with('product',$product);
     }
 
     /**
@@ -69,9 +89,9 @@ class ProductController extends Controller
      * @param  \App\Models\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        //
+        dd($request);
     }
 
     /**

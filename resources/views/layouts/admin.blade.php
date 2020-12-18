@@ -20,13 +20,25 @@
       @include('layouts.partials.sidebar')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-
-
-     @yield('content')
-
-    <!-- /.content -->
-  </div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>@yield('content-header')</h1>
+          </div>
+          <div class="col-sm-6 text-right">
+            @yield('content-actions')
+          </div><!-- /.col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
   <!-- /.content-wrapper -->
+  <section class="content">
+    @include('layouts.partials.alert.success')
+    @include('layouts.partials.alert.error')
+    @yield('content')
+  </section>
 
   @include('layouts.partials.footer')
   

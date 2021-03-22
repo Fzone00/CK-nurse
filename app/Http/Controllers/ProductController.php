@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProductController extends Controller
 {
@@ -17,7 +21,10 @@ class ProductController extends Controller
     public function index()
     {
         
-        $products = Product::latest()->paginate(10);        
+        $products = Product::orderBy('id', 'ASC')->paginate(10);  
+        if (request()->wantsJson()) {
+            return ProductResource::collection($products);
+        }      
         return view('products.index')->with('products',$products);
     }
 
@@ -51,7 +58,6 @@ class ProductController extends Controller
             'image' => $image_path,
             'barcode' =>$request->barcode,
             'price' =>$request->price,
-            'status' =>$request->status
         ]);
 
         if (! $product) {
@@ -91,7 +97,27 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
-        dd($request);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->barcode =$request->barcode;
+        $product->price =$request->price;
+
+
+        if ($request->hasFile('image')) {
+
+            if ($product->image) {
+                Storage::delete($product->image);
+            }
+
+            $image_path = $request->file('image')->store('products');
+
+            $product->image = $image_path;
+        }
+
+        if (! $product->save()) {
+            return redirect()->back()->with('error', 'Sorry, there\'re a problem while updating product.');
+        }
+        return redirect()->route('products.index')->with('success', 'Success,you product have been updated.');
     }
 
     /**
@@ -102,6 +128,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        if ($product->image) {
+            Storage::delete($product->image);
+        }
+        $product->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

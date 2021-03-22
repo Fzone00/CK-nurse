@@ -1,0 +1,1 @@
+<?php /**PATH C:\xampp\htdocs\CK nurse\resources\views/layouts/partials/navbar.blade.php ENDPATH**/ ?>

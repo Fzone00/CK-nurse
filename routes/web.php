@@ -20,6 +20,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/settings', 'SettingController@index')->name('settings.index');
+Route::post('/settings', 'SettingController@store')->name('settings.store');
 Route::resource('home/products', 'ProductController');
+Route::resource('home/settings', 'SettingController');
+Route::resource('home/orders', 'OrderController');
 
+Route::get('/cart', 'CartController@index')->name('cart.index');
+Route::post('/cart', 'CartController@store')->name('cart.store');
+Route::delete('/cart/delete', 'CartController@delete');
+
+Route::get('/change-password','SettingController@change_password')->name('change_password');
+Route::post('/update-password','SettingController@update_password')->name('update_password');	
